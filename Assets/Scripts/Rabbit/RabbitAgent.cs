@@ -231,34 +231,22 @@ public sealed class RabbitAgent : Agent
             {
                 switch(hit.collider.tag)
                 {
+                    case "Consumable":
+                        Debug.DrawLine(transform.position, hit.point, Color.green, 1);
+                        // Retrieve the consumable script and observe its properties.
+                        Consumable item = hit.collider.gameObject.GetComponent<Consumable>();
+                        sensor.AddOneHotObservation((int)item.ConsumableType, 6);
+                        sensor.AddObservation(item.consumableUnits);
+                        break;
                     case "Ground":
                         Debug.DrawLine(transform.position, hit.point, Color.black, 1);
-                        sensor.AddOneHotObservation(0, 6);
+                        sensor.AddOneHotObservation(3, 6);
                         sensor.AddObservation(0);
                         break;
                     case "Agent":
                         Debug.DrawLine(transform.position, hit.point, Color.white, 1);
-                        sensor.AddOneHotObservation(1, 6);
+                        sensor.AddOneHotObservation(4, 6);
                         sensor.AddObservation(0);
-                        break;
-                    case "Consumable":
-                        Consumable item = hit.collider.gameObject.GetComponent<Consumable>();
-                        switch(item.ConsumableType)
-                        {
-                            case ConsumableType.Grass:
-                                Debug.DrawLine(transform.position, hit.point, Color.green, 1);
-                                sensor.AddOneHotObservation(2, 6);
-                                break;
-                            case ConsumableType.Peppers:
-                                Debug.DrawLine(transform.position, hit.point, Color.green, 1);
-                                sensor.AddOneHotObservation(3, 6);
-                                break;
-                            case ConsumableType.Lettuce:
-                                Debug.DrawLine(transform.position, hit.point, Color.red, 1);
-                                sensor.AddOneHotObservation(4, 6);
-                                break;
-                        }
-                        sensor.AddObservation(item.consumableUnits);
                         break;
                     default:
                         sensor.AddOneHotObservation(5, 6);
