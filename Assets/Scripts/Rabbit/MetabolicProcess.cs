@@ -9,8 +9,9 @@ public sealed class MetabolicProcess : MonoBehaviour
     [SerializeField] private float[] quantitiesRequired = null;
     [SerializeField] private float energyProduced = 0;
 
-    // Expose information about this metabolic process.
+    /// <summary>Contains the required components for this reaction</summary>
     public Dictionary<ConsumableType, float> Requirements { get; private set; }
+    /// <summary>How many units of energy does this reaction produce(per second)</summary>
     public float EnergyProduced { get { return energyProduced; } }
 
     private void Start()
@@ -18,6 +19,7 @@ public sealed class MetabolicProcess : MonoBehaviour
         // Notify invalid inspector values.
         if(componentsRequired.Length != quantitiesRequired.Length)
             Debug.LogError(@"Fields `Components Required` and `Quantities Required` must have the same length!");
+
         // Create a dictionary to expose this process to other classes.
         Dictionary<ConsumableType, float> requirements = new Dictionary<ConsumableType, float>();
         for(int i = 0; i < Mathf.Min(componentsRequired.Length, quantitiesRequired.Length); i++)
