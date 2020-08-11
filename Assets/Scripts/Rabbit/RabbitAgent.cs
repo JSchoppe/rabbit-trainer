@@ -42,9 +42,7 @@ public sealed class RabbitAgent : Agent
     [Header("Training Parameters")]
     [Tooltip("The environment the rabbit is in(strictly for reward purposes)")]
     [SerializeField] private Environment environment = null;
-    [Tooltip("The reward given at the end of the episode per second survived")]
-    [SerializeField] private float survivalReward = 0.1f;
-    [Tooltip("Basic reward given per second when a rabbit is consuming an item")]
+    [Tooltip("Reward given per second when a rabbit is consuming an item")]
     [SerializeField] private float consumptionReward = 0.1f;
     [Tooltip("Reward given when the agent is near an environment consumable")]
     [SerializeField] private float proximityReward = 0.1f;
@@ -58,7 +56,6 @@ public sealed class RabbitAgent : Agent
     private bool isAlive = false;
     private bool isEating = false;
     private float currentEnergy;
-    private float startTime;
 
     /// <summary>Called when this agent runs out of energy</summary>
     public event AgentEventListener OnAgentDeceased;
@@ -89,12 +86,11 @@ public sealed class RabbitAgent : Agent
         foreach(byte value in System.Enum.GetValues(typeof(ConsumableType)))
             stomach.Add((ConsumableType)value, 0);
 
-        // Reset the rabbit state and energy.
-        isAlive = true;
-        startTime = Time.fixedTime;
-        currentEnergy = startingEnergy;
         // Reset physics state.
         body.velocity = Vector3.zero;
+        // Reset the rabbit state and energy.
+        isAlive = true;
+        currentEnergy = startingEnergy;
     }
 
     /// <summary>Prompts the agent to eat an item they are close to</summary>
@@ -148,8 +144,6 @@ public sealed class RabbitAgent : Agent
         currentEnergy -= homeostasisEnergyLoss * Time.fixedDeltaTime;
         if(currentEnergy < 0)
         {
-            // Add the last reward for total survival time.
-            AddReward(survivalReward * (Time.fixedTime - startTime));
             // Finalize state and notify listeners.
             isAlive = false;
             OnAgentDeceased?.Invoke(this);
@@ -160,12 +154,7 @@ public sealed class RabbitAgent : Agent
     private void FixedUpdate()
     {
         if(isAlive)
-        {
             Metabolize();
-
-            // Add a small reward for survival.
-            AddReward(survivalReward * Time.fixedDeltaTime);
-        }
     }
 
     // When the agent collides with a surface:
