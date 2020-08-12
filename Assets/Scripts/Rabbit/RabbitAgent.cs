@@ -98,17 +98,9 @@ public sealed class RabbitAgent : Agent
     /// <param name="consumable">The consumable item</param>
     public void Eat(Consumable consumable)
     {
-        float consumption = Time.fixedDeltaTime * consumptionRate;
-        if(consumable.ConsumableUnits < consumption)
-        {
-            consumption = consumable.ConsumableUnits;
-            consumable.ConsumableUnits = 0;
-            isEating = false;
-        }
-        else
-        {
-            consumable.ConsumableUnits -= consumption;
-        }
+        // Consume as much as possible.
+        float consumption = Mathf.Min(Time.fixedDeltaTime * consumptionRate, consumable.ConsumableUnits);
+        consumable.ConsumableUnits -= consumption;
         stomach[consumable.ConsumableType] += consumption;
 
         // Hard code a reward to encourage eating objects.
