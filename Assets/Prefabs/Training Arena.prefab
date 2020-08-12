@@ -784,9 +784,9 @@ MonoBehaviour:
   - {fileID: 8495614317933119907, guid: 1857dc7289ec65b4186b9170c320bed9, type: 3}
   - {fileID: 8161138689388325804, guid: 433ec15a58d320c42b924925ba2c0f70, type: 3}
   spawnQuantityRanges:
-  - {x: 60, y: 60}
-  - {x: 25, y: 25}
-  - {x: 15, y: 15}
+  - {x: 55, y: 60}
+  - {x: 20, y: 25}
+  - {x: 12, y: 15}
   minDistanceBetween: 2
 --- !u!1 &2992541353093522594
 GameObject:

@@ -24,13 +24,31 @@ public sealed class Consumable : MonoBehaviour
     #endregion
     #region Accessible Fields
     /// <summary>The food units remaining in this consumable item</summary>
-    [HideInInspector] public float consumableUnits;
+    public float ConsumableUnits
+    { 
+        get { return consumableUnits; }
+        set
+        {
+            consumableUnits = value;
+
+            // Redraw this consumable in its eaten state.
+            drawingImplementation.Redraw(ConsumableUnits / initialUnits);
+            // If this item has been consumed, make it un-observable.
+            if(consumableUnits < 0)
+            {
+                GetComponent<Collider>().enabled = false;
+                // Notify listeners that this item has been consumed.
+                onConsumedCompletely?.Invoke(this);
+            }
+        }
+    }
     /// <summary>Fired once when this consumable has been exhausted</summary>
     public event ConsumableEventListener onConsumedCompletely;
     #endregion
     #region Private Fields
     // Remember the initial saturation of this consumable.
     private float initialUnits;
+    private float consumableUnits;
     #endregion
 
     #region Monobehavior Implementation
@@ -39,27 +57,8 @@ public sealed class Consumable : MonoBehaviour
         // Add some visual variance by rotating it.
         transform.Rotate(transform.up, Random.value * 360);
         // Create a random size for this consumable.
-        consumableUnits = initialUnits = Mathf.Lerp(minUnits, maxUnits, Random.value);
+        ConsumableUnits = initialUnits = Mathf.Lerp(minUnits, maxUnits, Random.value);
         transform.localScale = Vector3.one * initialUnits;
-    }
-    private void OnTriggerStay(Collider other)
-    {
-        if(other.gameObject.CompareTag("Agent"))
-        {
-            // Since we only are using rabbits we can assume the agent
-            // is a rabbit. We will have the rabbit begin to eat this consumable.
-            RabbitAgent agent = other.gameObject.GetComponent<RabbitAgent>();
-            agent.Eat(this);
-            // Redraw this consumable in its eaten state.
-            drawingImplementation.Redraw(consumableUnits / initialUnits);
-            // If this item has been consumed, make it un-observable.
-            if(consumableUnits == 0)
-            {
-                GetComponent<Collider>().enabled = false;
-                // Notify listeners that this item has been consumed.
-                onConsumedCompletely?.Invoke(this);
-            }
-        }
     }
     #endregion
 }

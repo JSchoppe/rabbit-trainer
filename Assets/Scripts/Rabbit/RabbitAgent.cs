@@ -56,6 +56,7 @@ public sealed class RabbitAgent : Agent
     private bool isAlive = false;
     private bool isEating = false;
     private float currentEnergy;
+    private Consumable currentConsumable;
 
     /// <summary>Called when this agent runs out of energy</summary>
     public event AgentEventListener OnAgentDeceased;
@@ -98,15 +99,15 @@ public sealed class RabbitAgent : Agent
     public void Eat(Consumable consumable)
     {
         float consumption = Time.fixedDeltaTime * consumptionRate;
-        if(consumable.consumableUnits < consumption)
+        if(consumable.ConsumableUnits < consumption)
         {
-            consumption = consumable.consumableUnits;
-            consumable.consumableUnits = 0;
+            consumption = consumable.ConsumableUnits;
+            consumable.ConsumableUnits = 0;
             isEating = false;
         }
         else
         {
-            consumable.consumableUnits -= consumption;
+            consumable.ConsumableUnits -= consumption;
         }
         stomach[consumable.ConsumableType] += consumption;
 
@@ -173,7 +174,7 @@ public sealed class RabbitAgent : Agent
                         // Create a reward proportional to the proximity of this consumable.
                         float reward = Mathf.Lerp(proximityReward, 0, Mathf.InverseLerp(0, proximityRange, distance));
                         // Increase reward of the consumables in proximity have more to eat.
-                        reward *= consumable.consumableUnits;
+                        reward *= consumable.ConsumableUnits;
                         AddReward(reward);
                     }
                 }
@@ -182,12 +183,16 @@ public sealed class RabbitAgent : Agent
             }
             else if(collision.transform.CompareTag("Consumable"))
             {
-                // Allow the rabbit to observe that it is eating.
-                Consumable consumable = collision.transform.GetComponent<Consumable>();
-                if(consumable.consumableUnits > 0)
-                    isEating = true;
+                // Prompt the rabbit to eat this consumable.
+                isEating = true;
+                currentConsumable = collision.gameObject.GetComponent<Consumable>();
             }
         }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if(isAlive && collision.transform.CompareTag("Consumable"))
+            isEating = false;
     }
 
     // Observation space explanation
@@ -225,7 +230,7 @@ public sealed class RabbitAgent : Agent
                         // Retrieve the consumable script and observe its properties.
                         Consumable item = hit.collider.gameObject.GetComponent<Consumable>();
                         sensor.AddOneHotObservation((int)item.ConsumableType, 6);
-                        sensor.AddObservation(item.consumableUnits);
+                        sensor.AddObservation(item.ConsumableUnits);
                         break;
                     case "Ground":
                         Debug.DrawLine(transform.position, hit.point, Color.black, 1);
