@@ -155,7 +155,11 @@ public sealed class RabbitAgent : Agent
     private void FixedUpdate()
     {
         if(isAlive)
+        {
             Metabolize();
+            if(isEating)
+                Eat(currentConsumable);
+        }
     }
 
     // When the agent collides with a surface:
