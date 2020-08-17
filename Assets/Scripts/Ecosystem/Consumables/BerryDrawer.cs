@@ -27,8 +27,8 @@ public sealed class BerryDrawer : Drawer
                 float subRangeLeft = (float)i / berries.Length;
                 float subRangeRight = (float)(i + 1) / berries.Length;
                 float subInterpolant = Mathf.Clamp(Mathf.InverseLerp(subRangeLeft, subRangeRight, interpolant), 0, 1);
-                // Updater this berry relative to its initial size.
-                if(berries[i] != null)
+                // Update this berry relative to its initial size.
+                if(berries[i] != null && berriesInitialScale != null)
                     berries[i].localScale = berriesInitialScale[i] * subInterpolant;
             }
         }
