@@ -1184,7 +1184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 50
+    VectorObservationSize: 68
     NumStackedVectorObservations: 3
     VectorActionSize: 03000000
     VectorActionDescriptions: []
@@ -1232,7 +1232,6 @@ MonoBehaviour:
   - {fileID: 3339934654429193834}
   - {fileID: 7761307463930034495}
   environment: {fileID: 0}
-  survivalReward: 0.001
   consumptionReward: 0.005
   proximityReward: 0.1
   proximityRange: 4
