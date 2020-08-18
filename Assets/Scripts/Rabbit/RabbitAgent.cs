@@ -157,37 +157,39 @@ public sealed class RabbitAgent : Agent
     // When the agent collides with a surface:
     private void OnCollisionEnter(Collision collision)
     {
-        if(isAlive)
+        if(isAlive && collision.transform.CompareTag("Floor"))
         {
-            if(collision.transform.CompareTag("Floor"))
+            // Assign a reward based on the proximity of consumables.
+            foreach(Consumable consumable in environment.spawnedConsumables)
             {
-                // Assign a reward based on the proximity of consumables.
-                foreach(Consumable consumable in environment.spawnedConsumables)
+                float distance = Vector3.Distance(consumable.transform.position, transform.position);
+                if(distance < proximityRange)
                 {
-                    float distance = Vector3.Distance(consumable.transform.position, transform.position);
-                    if(distance < proximityRange)
-                    {
-                        // Create a reward proportional to the proximity of this consumable.
-                        float reward = Mathf.Lerp(proximityReward, 0, Mathf.InverseLerp(0, proximityRange, distance));
-                        // Increase reward of the consumables in proximity have more to eat.
-                        reward *= consumable.ConsumableUnits;
-                        AddReward(reward);
-                    }
+                    // Create a reward proportional to the proximity of this consumable.
+                    // Have the reward falloff exponentially to prevent the rabbit from
+                    // sitting between the consumables.
+                    float reward = Mathf.Lerp(0, proximityReward, Mathf.Pow(Mathf.InverseLerp(proximityRange, 0, distance), 2));
+                    // Increase reward of the consumables in proximity have more to eat.
+                    reward *= consumable.ConsumableUnits;
+                    AddReward(reward);
                 }
-                // Request the next action since the rabbit has become grounded.
-                RequestDecision();
             }
-            else if(collision.transform.CompareTag("Consumable"))
-            {
-                // Prompt the rabbit to eat this consumable.
-                isEating = true;
-                currentConsumable = collision.gameObject.GetComponent<Consumable>();
-            }
+            // Request the next action since the rabbit has become grounded.
+            RequestDecision();
         }
     }
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(isAlive && collision.transform.CompareTag("Consumable"))
+        if(isAlive && other.transform.CompareTag("Consumable"))
+        {
+            // Prompt the rabbit to eat this consumable.
+            isEating = true;
+            currentConsumable = other.gameObject.GetComponent<Consumable>();
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.transform.CompareTag("Consumable"))
             isEating = false;
     }
 
