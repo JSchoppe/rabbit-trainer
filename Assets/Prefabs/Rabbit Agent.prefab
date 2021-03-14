@@ -1209,8 +1209,6 @@ GameObject:
   - component: {fileID: 6029865199249683615}
   - component: {fileID: 6029865199249683614}
   - component: {fileID: 6029865199249683613}
-  - component: {fileID: 3339934654429193834}
-  - component: {fileID: 7761307463930034495}
   m_Layer: 0
   m_Name: Rabbit Agent
   m_TagString: Agent
@@ -1324,46 +1322,11 @@ MonoBehaviour:
   consumptionRate: 0.5
   startingEnergy: 70
   homeostasisEnergyLoss: 1
-  metabolicProcesses:
-  - {fileID: 3339934654429193834}
-  - {fileID: 7761307463930034495}
+  metabolism: {fileID: 11400000, guid: 5a3e76237299dd041b30c22481a639bd, type: 2}
   environment: {fileID: 0}
   consumptionReward: 0.1
   proximityReward: 0.01
   proximityRange: 8
---- !u!114 &3339934654429193834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6029865199249683611}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c47b102c41b9a941913c80a9e7ad6e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  componentsRequired: 0200
-  quantitiesRequired:
-  - 0.34
-  - 0.06
-  energyProduced: 10
---- !u!114 &7761307463930034495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6029865199249683611}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c47b102c41b9a941913c80a9e7ad6e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  componentsRequired: 01
-  quantitiesRequired:
-  - 0.1
-  energyProduced: -4
 --- !u!1 &6384597090232905970
 GameObject:
   m_ObjectHideFlags: 0
