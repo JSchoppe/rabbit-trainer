@@ -87,11 +87,12 @@ public sealed class RabbitAgent : Agent
         foreach(byte value in System.Enum.GetValues(typeof(ConsumableType)))
             stomach.Add((ConsumableType)value, 0);
 
-        // Reset physics state.
-        body.velocity = Vector3.zero;
         // Reset the rabbit state and energy.
         isAlive = true;
         currentEnergy = startingEnergy;
+        // Reset physics state.
+        if (body != null)
+            body.velocity = Vector3.zero;
     }
 
     /// <summary>Prompts the agent to eat an item they are close to</summary>
