@@ -1,29 +1,36 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
 
-/// <summary>Represents a reaction creating energy from components</summary>
-public sealed class MetabolicProcess : MonoBehaviour
+/// <summary>
+/// Represents a reaction creating energy from components.
+/// </summary>
+[Serializable]
+public sealed class MetabolicProcess
 {
-    // Define this process via the inspector.
-    [SerializeField] private ConsumableType[] componentsRequired = null;
-    [SerializeField] private float[] quantitiesRequired = null;
-    [SerializeField] private float energyProduced = 0;
-
-    /// <summary>Contains the required components for this reaction</summary>
-    public Dictionary<ConsumableType, float> Requirements { get; private set; }
-    /// <summary>How many units of energy does this reaction produce(per second)</summary>
-    public float EnergyProduced { get { return energyProduced; } }
-
-    private void Start()
+    #region Fields
+    private readonly Dictionary<ConsumableType, float> requirements;
+    private readonly float energyProduced;
+    #endregion
+    #region Constructors
+    /// <summary>
+    /// Creates a new metabolic process.
+    /// </summary>
+    /// <param name="requirements">The process requirements.</param>
+    /// <param name="energyProduced">The energy produced from the reaction.</param>
+    public MetabolicProcess(Dictionary<ConsumableType, float> requirements, float energyProduced)
     {
-        // Notify invalid inspector values.
-        if(componentsRequired.Length != quantitiesRequired.Length)
-            Debug.LogError(@"Fields `Components Required` and `Quantities Required` must have the same length!");
-
-        // Create a dictionary to expose this process to other classes.
-        Dictionary<ConsumableType, float> requirements = new Dictionary<ConsumableType, float>();
-        for(int i = 0; i < Mathf.Min(componentsRequired.Length, quantitiesRequired.Length); i++)
-            requirements.Add(componentsRequired[i], quantitiesRequired[i]);
-        Requirements = requirements;
+        this.requirements = requirements;
+        this.energyProduced = energyProduced;
     }
+    #endregion
+    #region Accessors
+    /// <summary>
+    /// The required components and their quantities for this reaction.
+    /// </summary>
+    public Dictionary<ConsumableType, float> Requirements => requirements;
+    /// <summary>
+    /// How many units of energy this reaction produces.
+    /// </summary>
+    public float EnergyProduced => energyProduced;
+    #endregion
 }

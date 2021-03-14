@@ -37,7 +37,7 @@ public sealed class RabbitAgent : Agent
     [Tooltip("How much energy is lost per second")]
     [SerializeField] private float homeostasisEnergyLoss = 1;
     [Tooltip("Process that describe how food is metabolized into energy")]
-    [SerializeField] private MetabolicProcess[] metabolicProcesses = null;
+    [SerializeField] private MetabolicProcessProfile metabolism = null;
 
     [Header("Training Parameters")]
     [Tooltip("The environment the rabbit is in(strictly for reward purposes)")]
@@ -111,7 +111,7 @@ public sealed class RabbitAgent : Agent
     private void Metabolize()
     {
         // Simulate digestion reactions:
-        foreach(MetabolicProcess process in metabolicProcesses)
+        foreach(MetabolicProcess process in metabolism.Processes)
         {
             // Check to see if every component is available for this process.
             bool allComponentsAvailable = true;
