@@ -456,8 +456,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFollowingAgent: 1
   targetAgent: {fileID: 2992541353325986229}
-  distanceBehind: 6
-  distanceAbove: 3
+  distanceBehind: 4
+  distanceAbove: 2
 --- !u!1001 &804173090
 PrefabInstance:
   m_ObjectHideFlags: 0
